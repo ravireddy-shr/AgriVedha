@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGRI VEDHA - Agricultural Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="logo-container">
+                <img src="/uploads/WhatsApp Image 2025-09-10 at 17.13.48_b6c62460.jpg" alt="AGRI VEDHA" class="logo">
+                <h1>AGRI VEDHA</h1>
+                <p>Agricultural Dashboard with Gamification</p>
+            </div>
+            
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="showMobileLogin()">Mobile Login</button>
+                <button class="tab-btn" onclick="showAadhaarLogin()">Aadhaar Login</button>
+            </div>
+            
+            <div id="mobileLogin" class="login-form">
+                <input type="tel" id="mobileNumber" placeholder="Enter Mobile Number" maxlength="10">
+                <input type="text" id="mobileOtp" placeholder="Enter OTP (Last 4 digits)" maxlength="4">
+                <button onclick="loginWithMobile()" class="login-btn">Login</button>
+            </div>
+            
+            <div id="aadhaarLogin" class="login-form" style="display: none;">
+                <input type="text" id="aadhaarNumber" placeholder="xxxx-xxxx-xxxx" maxlength="14">
+                <input type="text" id="aadhaarOtp" placeholder="Enter OTP (Last 4 digits)" maxlength="4">
+                <button onclick="loginWithAadhaar()" class="login-btn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="dashboard" style="display: none;">
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search..." id="globalSearch">
+            </div>
+            <div class="header-right">
+                <img src="/uploads/WhatsApp Image 2025-09-10 at 17.13.48_b6c62460.jpg" alt="AGRI VEDHA" class="header-logo">
+                <span class="app-name">AGRI VEDHA</span>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('profile')">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('tasks')">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('rewards')">
+                    <i class="fas fa-gift"></i>
+                    <span>Rewards</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('market')">
+                    <i class="fas fa-store"></i>
+                    <span>Market</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('govt-bonus')">
+                    <i class="fas fa-coins"></i>
+                    <span>Govt Bonus</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('leaderboard')">
+                    <i class="fas fa-trophy"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('history')">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card green">
+                        <i class="fas fa-seedling"></i>
+                        <div class="stat-content">
+                            <h3 id="pointsEarned">0</h3>
+                            <p>Points Earned</p>
+                        </div>
+                    </div>
+                    <div class="stat-card blue">
+                        <i class="fas fa-medal"></i>
+                        <div class="stat-content">
+                            <h3 id="badgesEarned">0</h3>
+                            <p>Badges Earned</p>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <i class="fas fa-leaf"></i>
+                        <div class="stat-content">
+                            <h3 id="sustainabilityScore">0%</h3>
+                            <p>Sustainability Score</p>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="stat-content">
+                            <h3 id="tasksCompleted">0</h3>
+                            <p>Tasks Completed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Graph Section -->
+                <div class="graph-section">
+                    <div class="main-graph">
+                        <h3>Sustainability Progress</h3>
+                        <canvas id="sustainabilityChart" width="600" height="300"></canvas>
+                    </div>
+                    <div class="mini-graphs">
+                        <div class="mini-graph">
+                            <h4>Tasks Overview</h4>
+                            <canvas id="tasksChart" width="200" height="150"></canvas>
+                        </div>
+                        <div class="mini-graph">
+                            <h4>Market Alerts</h4>
+                            <div id="marketAlerts" class="alerts-list">No active alerts</div>
+                        </div>
+                        <div class="mini-graph">
+                            <h4>Recent Sales</h4>
+                            <canvas id="salesChart" width="200" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <h2>Farmer Profile</h2>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="farmerName" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" id="farmerLocation" placeholder="Enter your location">
+                            </div>
+                            <div class="form-group">
+                                <label>Main Crop</label>
+                                <select id="farmerMainCrop">
+                                    <option value="">Select main crop</option>
+                                    <option value="rice">Rice</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="coconut">Coconut</option>
+                                    <option value="banana">Banana</option>
+                                    <option value="tomato">Tomato</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Farm Size (acres)</label>
+                                <input type="number" id="farmerFarmSize" placeholder="Enter farm size">
+                            </div>
+                            <button type="submit" class="save-btn">Save Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div id="tasksPage" class="page">
+                <div class="tasks-container">
+                    <h2>Farming Tasks</h2>
+                    <div id="tasksList" class="tasks-list">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rewards Page -->
+            <div id="rewardsPage" class="page">
+                <div class="rewards-container">
+                    <h2>Rewards & Redemptions</h2>
+                    <div class="current-points">
+                        <h3>Your Points: <span id="currentPoints">0</span></h3>
+                    </div>
+                    <div id="rewardsList" class="rewards-list">
+                        <!-- Rewards will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Page -->
+            <div id="marketPage" class="page">
+                <div class="market-container">
+                    <h2>Market Prices</h2>
+                    <div id="pricesGrid" class="prices-grid">
+                        <!-- Market prices will be loaded here -->
+                    </div>
+                    
+                    <div class="alert-form">
+                        <h3>Set Price Alert</h3>
+                        <select id="alertCrop">
+                            <option value="">Select Crop</option>
+                            <option value="coconut">Coconut</option>
+                            <option value="banana">Banana</option>
+                            <option value="rice">Rice</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="tomato">Tomato</option>
+                        </select>
+                        <input type="number" id="targetPrice" placeholder="Target Price">
+                        <button onclick="setAlert()" class="alert-btn">Set Alert</button>
+                    </div>
+                    
+                    <div id="alertsDisplay" class="alerts-display" style="margin-top: 20px;">
+                        <h3>Active Price Alerts</h3>
+                        <div id="activeAlerts" class="active-alerts">
+                            <!-- Active alerts will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Bonus Page -->
+            <div id="govt-bonusPage" class="page">
+                <div class="govt-container">
+                    <h2>Government Bonus Scheme</h2>
+                    <p class="bonus-info">Get 10% bonus on your crop sales through government scheme</p>
+                    
+                    <form id="bonusForm" class="bonus-form">
+                        <div class="form-group">
+                            <label>Crop</label>
+                            <select id="bonusCrop" required>
+                                <option value="">Select Crop</option>
+                                <option value="coconut">Coconut</option>
+                                <option value="banana">Banana</option>
+                                <option value="rice">Rice</option>
+                                <option value="wheat">Wheat</option>
+                                <option value="tomato">Tomato</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity (Quintals)</label>
+                            <input type="number" id="bonusQuantity" placeholder="Enter quantity in quintals" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Base Price per Quintal (₹)</label>
+                            <input type="number" id="bonusBasePrice" placeholder="Enter base price per quintal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>District</label>
+                            <select id="bonusDistrict" required>
+                                <option value="">Select District</option>
+                                <option value="thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="kollam">Kollam</option>
+                                <option value="pathanamthitta">Pathanamthitta</option>
+                                <option value="alappuzha">Alappuzha</option>
+                                <option value="kottayam">Kottayam</option>
+                                <option value="idukki">Idukki</option>
+                                <option value="ernakulam">Ernakulam</option>
+                                <option value="thrissur">Thrissur</option>
+                                <option value="palakkad">Palakkad</option>
+                                <option value="malappuram">Malappuram</option>
+                                <option value="kozhikode">Kozhikode</option>
+                                <option value="wayanad">Wayanad</option>
+                                <option value="kannur">Kannur</option>
+                                <option value="kasaragod">Kasaragod</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Buyer Name</label>
+                            <input type="text" id="bonusBuyer" placeholder="Enter buyer name" required>
+                        </div>
+                        <button type="submit" class="bonus-btn">Calculate Bonus & Submit</button>
+                    </form>
+                    
+                    <div id="bonusResult" class="bonus-result" style="display: none;"></div>
+                    
+                    <div id="salesHistory" class="sales-history" style="margin-top: 30px;">
+                        <h3>Recent Sales</h3>
+                        <div id="recentSales" class="recent-sales">
+                            <!-- Recent sales will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Page -->
+            <div id="leaderboardPage" class="page">
+                <div class="leaderboard-container">
+                    <h2>Top Farmers Leaderboard</h2>
+                    <div id="leaderboardList" class="leaderboard-list">
+                        <!-- Leaderboard will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Page -->
+            <div id="historyPage" class="page">
+                <div class="history-container">
+                    <h2>Activity History</h2>
+                    <div id="historyList" class="history-list">
+                        <p>Your activity history will appear here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="profile-widget">
+                <div class="farmer-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 id="sidebarName">Welcome Farmer</h3>
+                <div class="farmer-details">
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="sidebarLocation">-</span></p>
+                    <p><i class="fas fa-seedling"></i> <span id="sidebarCrop">-</span></p>
+                    <p><i class="fas fa-expand-arrows-alt"></i> <span id="sidebarFarmSize">-</span> acres</p>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <span class="stat-value" id="sidebarPoints">0</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-value" id="sidebarBadges">0</span>
+                        <span class="stat-label">Badges</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-value" id="sidebarSustainability">0%</span>
+                        <span class="stat-label">Sustainability</span>
+                    </div>
+                </div>
+
+                <div class="badges-section">
+                    <h4>Earned Badges</h4>
+                    <div id="badgesContainer" class="badges-container">
+                        <!-- Badges will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="upcoming-missions">
+                    <h4>Upcoming Missions</h4>
+                    <div id="upcomingTasks" class="upcoming-list">
+                        <!-- Upcoming tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Assistant -->
+        <div class="voice-assistant">
+            <button class="voice-btn" onclick="speakInLanguage('en-IN')" title="Speak in English">
+                <i class="fas fa-volume-up"></i> EN
+            </button>
+            <button class="voice-btn" onclick="speakInLanguage('hi-IN')" title="Speak in Malayalam">
+                <i class="fas fa-volume-up"></i> ML
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
